@@ -5,8 +5,6 @@ import 'package:flutter_reader/deferred_widget.dart';
 import 'package:flutter_reader/main.dart';
 import 'package:flutter_reader/pages/demo.dart';
 import 'package:flutter_reader/pages/home.dart';
-import 'package:flutter_reader/studies/crane/app.dart' deferred as crane;
-import 'package:flutter_reader/studies/crane/routes.dart' as crane_routes;
 import 'package:flutter_reader/studies/fortnightly/app.dart'
     deferred as fortnightly;
 import 'package:flutter_reader/studies/fortnightly/routes.dart'
@@ -70,15 +68,6 @@ class RouteConfiguration {
       (context, match) => StudyWrapper(
         study: DeferredWidget(shrine.loadLibrary,
             () => shrine.ShrineApp()), // ignore: prefer_const_constructors
-      ),
-      openInSecondScreen: true,
-    ),
-    Path(
-      r'^' + crane_routes.defaultRoute,
-      (context, match) => StudyWrapper(
-        study: DeferredWidget(crane.loadLibrary,
-            () => crane.CraneApp(), // ignore: prefer_const_constructors
-            placeholder: const DeferredLoadingPlaceholder(name: 'Crane')),
       ),
       openInSecondScreen: true,
     ),

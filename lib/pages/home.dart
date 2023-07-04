@@ -11,8 +11,6 @@ import 'package:flutter_reader/layout/adaptive.dart';
 import 'package:flutter_reader/pages/category_list_item.dart';
 import 'package:flutter_reader/pages/settings.dart';
 import 'package:flutter_reader/pages/splash.dart';
-import 'package:flutter_reader/studies/crane/colors.dart';
-import 'package:flutter_reader/studies/crane/routes.dart' as crane_routes;
 import 'package:flutter_reader/studies/fortnightly/routes.dart'
     as fortnightly_routes;
 import 'package:flutter_reader/studies/rally/colors.dart';
@@ -86,21 +84,6 @@ class HomePage extends StatelessWidget {
         ),
         assetDarkColor: const Color(0xFF253538),
         studyRoute: rally_routes.loginRoute,
-      ),
-      _CarouselCard(
-        demo: studyDemos['crane'],
-        asset: const AssetImage(
-          'assets/studies/crane_card.png',
-          package: 'flutter_gallery_assets',
-        ),
-        assetColor: const Color(0xFFFBF6F8),
-        assetDark: const AssetImage(
-          'assets/studies/crane_card_dark.png',
-          package: 'flutter_gallery_assets',
-        ),
-        assetDarkColor: const Color(0xFF591946),
-        textColor: cranePurple700,
-        studyRoute: crane_routes.defaultRoute,
       ),
       _CarouselCard(
         demo: studyDemos['fortnightly'],
