@@ -1,11 +1,12 @@
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:dual_screen/dual_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/gallery_localizations.dart';
 import 'package:flutter_reader/constants.dart';
 import 'package:flutter_reader/layout/adaptive.dart';
-import 'package:flutter_reader/pages/home.dart';
+import 'package:flutter_reader/hub/home_screen.dart';
 
 const homePeekDesktop = 210.0;
 const homePeekMobile = 60.0;
@@ -27,8 +28,9 @@ class SplashPageAnimation extends InheritedWidget {
   bool updateShouldNotify(SplashPageAnimation oldWidget) => true;
 }
 
-class SplashPage extends StatefulWidget {
-  const SplashPage({
+@RoutePage()
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({
     super.key,
     required this.child,
   });
@@ -36,10 +38,10 @@ class SplashPage extends StatefulWidget {
   final Widget child;
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashPageState extends State<SplashPage>
+class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late int _effect;
@@ -194,11 +196,8 @@ class _SplashBackLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var effectAsset = 'splash_effects/splash_effect_$effect.gif';
-    final flutterLogo = Image.asset(
-      'assets/logo/flutter_logo.png',
-      package: 'flutter_gallery_assets',
-    );
+    var effectAsset = 'assets/splash_effects/splash_effect_$effect.gif';
+    final flutterLogo = Image.asset('assets/logo/flutter_logo.png');
 
     Widget? child;
     if (isSplashCollapsed) {
@@ -212,7 +211,7 @@ class _SplashBackLayer extends StatelessWidget {
               child: GestureDetector(
                 onTap: onTap,
                 child: flutterLogo,
-              ),
+              ), 
             ),
           ),
         );
@@ -243,7 +242,6 @@ class _SplashBackLayer extends StatelessWidget {
           Center(
             child: Image.asset(
               effectAsset,
-              package: 'flutter_gallery_assets',
             ),
           ),
           Center(child: flutterLogo),

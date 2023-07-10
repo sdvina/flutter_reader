@@ -1,63 +1,37 @@
-import 'package:dual_screen/dual_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_gen/gen_l10n/gallery_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:flutter_reader/constants.dart';
-import 'package:flutter_reader/data/gallery_options.dart';
+import 'package:flutter_reader/layout/adaptive.dart';
 import 'package:flutter_reader/pages/backdrop.dart';
-import 'package:flutter_reader/pages/splash.dart';
-import 'package:flutter_reader/routes.dart';
-import 'package:flutter_reader/themes/gallery_theme_data.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'firebase_options.dart';
-import 'layout/adaptive.dart';
-
-export 'package:flutter_reader/data/demos.dart' show pumpDeferredLibraries;
+import 'constants.dart';
+import 'data/app_options.dart';
+import 'themes/gallery_theme_data.dart';
+import 'router/app_router.dart';
 
 void main() async {
-  GoogleFonts.config.allowRuntimeFetching = false;
   await GetStorage.init();
-
-  if (defaultTargetPlatform != TargetPlatform.linux &&
-      defaultTargetPlatform != TargetPlatform.windows &&
-      defaultTargetPlatform != TargetPlatform.macOS) {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    };
-    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-  }
-
-  runApp(const GalleryApp());
+  runApp(ReaderApp());
 }
 
-class GalleryApp extends StatelessWidget {
-  const GalleryApp({
+class ReaderApp extends StatelessWidget {
+  ReaderApp({
     super.key,
     this.initialRoute,
     this.isTestMode = false,
   });
 
+  final AppRouter _appRouter = AppRouter();
   final String? initialRoute;
   final bool isTestMode;
 
   @override
   Widget build(BuildContext context) {
     return ModelBinding(
-      initialModel: GalleryOptions(
+      initialModel: AppOptions(
         themeMode: ThemeMode.system,
         textScaleFactor: systemTextScaleFactorOption,
         customTextDirection: CustomTextDirection.localeBased,
@@ -68,11 +42,14 @@ class GalleryApp extends StatelessWidget {
       ),
       child: Builder(
         builder: (context) {
-          final options = GalleryOptions.of(context);
-          final hasHinge = MediaQuery.of(context).hinge?.bounds != null;
-          return MaterialApp(
-            restorationScopeId: 'rootGallery',
-            title: 'Flutter Gallery',
+          final options = AppOptions.of(context);
+          _appRouter.push(SplashRoute(
+              child: Backdrop(
+            isDesktop: isDisplayDesktop(context),
+          )));
+          return MaterialApp.router(
+            restorationScopeId: 'rootApp',
+            title: 'Flutter Reader',
             debugShowCheckedModeBanner: false,
             themeMode: options.themeMode,
             theme: GalleryThemeData.lightThemeData.copyWith(
@@ -85,34 +62,15 @@ class GalleryApp extends StatelessWidget {
               ...GalleryLocalizations.localizationsDelegates,
               LocaleNamesLocalizationsDelegate()
             ],
-            initialRoute: initialRoute,
             supportedLocales: GalleryLocalizations.supportedLocales,
             locale: options.locale,
             localeListResolutionCallback: (locales, supportedLocales) {
               deviceLocale = locales?.first;
               return basicLocaleListResolution(locales, supportedLocales);
             },
-            onGenerateRoute: (settings) =>
-                RouteConfiguration.onGenerateRoute(settings, hasHinge),
+            routerConfig: _appRouter.config(),
           );
         },
-      ),
-    );
-  }
-}
-
-class RootPage extends StatelessWidget {
-  const RootPage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ApplyTextOptions(
-      child: SplashPage(
-        child: Backdrop(
-          isDesktop: isDisplayDesktop(context),
-        ),
       ),
     );
   }

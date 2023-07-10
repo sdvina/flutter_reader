@@ -3,9 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/gallery_localizations.dart';
 import 'package:flutter_reader/constants.dart';
-import 'package:flutter_reader/data/gallery_options.dart';
+import 'package:flutter_reader/data/app_options.dart';
 import 'package:flutter_reader/layout/adaptive.dart';
-import 'package:flutter_reader/pages/home.dart';
+import 'package:flutter_reader/hub/home_screen.dart';
 import 'package:flutter_reader/pages/settings.dart';
 import 'package:flutter_reader/pages/settings_icon/icon.dart' as settings_icon;
 
@@ -55,7 +55,7 @@ class _BackdropState extends State<Backdrop> with TickerProviderStateMixin {
         SettingsPage(
           animationController: _settingsPanelController,
         );
-    _homePage = widget.homePage ?? const HomePage();
+    _homePage = widget.homePage ?? const HomeScreen();
   }
 
   @override
@@ -153,7 +153,7 @@ class _BackdropState extends State<Backdrop> with TickerProviderStateMixin {
     );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: GalleryOptions.of(context).resolvedSystemUiOverlayStyle(),
+      value: AppOptions.of(context).resolvedSystemUiOverlayStyle(),
       child: Stack(
         children: [
           if (!isDesktop) ...[
@@ -283,7 +283,7 @@ class _SettingsIcon extends AnimatedWidget {
                 toggleSettings();
                 SemanticsService.announce(
                   _settingsSemanticLabel(isSettingsOpenNotifier.value, context),
-                  GalleryOptions.of(context).resolvedTextDirection()!,
+                  AppOptions.of(context).resolvedTextDirection()!,
                 );
               },
               child: Padding(

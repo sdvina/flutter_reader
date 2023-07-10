@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/gallery_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_reader/constants.dart';
-import 'package:flutter_reader/data/gallery_options.dart';
+import 'package:flutter_reader/data/app_options.dart';
 import 'package:flutter_reader/layout/adaptive.dart';
 import 'package:flutter_reader/pages/about.dart' as about;
-import 'package:flutter_reader/pages/home.dart';
+import 'package:flutter_reader/hub/home_screen.dart';
 import 'package:flutter_reader/pages/settings_list_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final options = GalleryOptions.of(context);
+    final options = AppOptions.of(context);
     final isDesktop = isDisplayDesktop(context);
     final localizations = GalleryLocalizations.of(context);
 
@@ -166,7 +166,7 @@ class _SettingsPageState extends State<SettingsPage> {
             localizations.settingsTextScalingHuge,
           ),
         }),
-        onOptionChanged: (newTextScale) => GalleryOptions.update(
+        onOptionChanged: (newTextScale) => AppOptions.update(
           context,
           options.copyWith(textScaleFactor: newTextScale),
         ),
@@ -187,7 +187,7 @@ class _SettingsPageState extends State<SettingsPage> {
             localizations.settingsTextDirectionRTL,
           ),
         }),
-        onOptionChanged: (newTextDirection) => GalleryOptions.update(
+        onOptionChanged: (newTextDirection) => AppOptions.update(
           context,
           options.copyWith(customTextDirection: newTextDirection),
         ),
@@ -204,7 +204,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (newLocale == systemLocaleOption) {
             newLocale = deviceLocale;
           }
-          GalleryOptions.update(
+          AppOptions.update(
             context,
             options.copyWith(locale: newLocale),
           );
@@ -222,7 +222,7 @@ class _SettingsPageState extends State<SettingsPage> {
           TargetPlatform.linux: DisplayOption('Linux'),
           TargetPlatform.windows: DisplayOption('Windows'),
         }),
-        onOptionChanged: (newPlatform) => GalleryOptions.update(
+        onOptionChanged: (newPlatform) => AppOptions.update(
           context,
           options.copyWith(platform: newPlatform),
         ),
@@ -243,7 +243,7 @@ class _SettingsPageState extends State<SettingsPage> {
             localizations.settingsLightTheme,
           ),
         }),
-        onOptionChanged: (newThemeMode) => GalleryOptions.update(
+        onOptionChanged: (newThemeMode) => AppOptions.update(
           context,
           options.copyWith(themeMode: newThemeMode),
         ),
@@ -253,7 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ToggleSetting(
         text: GalleryLocalizations.of(context).settingsSlowMotion,
         value: options.timeDilation != 1.0,
-        onChanged: (isOn) => GalleryOptions.update(
+        onChanged: (isOn) => AppOptions.update(
           context,
           options.copyWith(timeDilation: isOn ? 5.0 : 1.0),
         ),
