@@ -40,7 +40,6 @@ class HomeScreen extends StatelessWidget {
         ),
         assetDarkColor: Color(0xFF1D2327),
         textColor: Colors.white,
-        studyRoute: '12121',
       ),
     ];
 
@@ -646,14 +645,13 @@ class _MobileCarouselState extends State<_MobileCarousel>
     );
 
     // We only want the second card to be animated.
-    if (index == 1) {
-      return _AnimatedCarouselCard(
-        controller: widget.animationController,
-        child: carouselCard,
-      );
-    } else {
-      return carouselCard;
-    }
+    return switch (index) {
+      1 => _AnimatedCarouselCard(
+          controller: widget.animationController,
+          child: carouselCard,
+        ),
+      _ => carouselCard
+    };
   }
 
   @override
@@ -885,7 +883,6 @@ class _CarouselCard extends StatelessWidget {
     this.assetColor,
     this.assetDarkColor,
     this.textColor,
-    required this.studyRoute,
   });
 
   final ImageProvider? asset;
@@ -893,7 +890,6 @@ class _CarouselCard extends StatelessWidget {
   final Color? assetColor;
   final Color? assetDarkColor;
   final Color? textColor;
-  final String studyRoute;
 
   @override
   Widget build(BuildContext context) {
